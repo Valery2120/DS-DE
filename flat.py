@@ -24,6 +24,7 @@ class Room:
         print(f"ширина - {self.width}м, длина - {self.length}м, высота - {self.height}м")
 
 
+# Неверно. У тебя класс одновременно и наследует и включает Address.
 class Flat(Address):
     price_per_one_meter = 600
 
@@ -60,9 +61,9 @@ class Flat(Address):
 
 if __name__ == "__main__":
 
-
     flat_01 = Flat('Советская', '1', '42')
     flat_01.add_room('Комната', 3., 3.6, 2.5)
+    # Если ты в словарь добавляешь object с ключом, который есть уже в словаре, предыдущий объект затирается.
     flat_01.add_room('Комната', 2.9, 3.9, 2.5)
     flat_01.add_room('Кухня', 2.3, 1.5, 2.5)
     flat_01.add_room('Туалет', 1., 1.8, 2.5)
