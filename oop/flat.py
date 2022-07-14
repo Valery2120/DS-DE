@@ -1,5 +1,3 @@
-import typing
-
 class Address:
 
     """
@@ -84,24 +82,13 @@ class Flat():
     def __init__(self, street: str, house: str, flat_number: str) -> None:
         self.address = Address(street, house, flat_number)
         self.rooms = {}
-        #self.number = 0
+
 
     def add_room(self, name: str, width: float, length: float, height: float) -> None:
-        """
-        Добавляется помещение в квартиру.
-
-        """
-        #name = name + '_1'
-        #self.rooms = {key + '_': val for key, val in self.rooms.items() if name in self.rooms}
-
+        """Добавляется помещение в квартиру."""
         if name in self.rooms.keys():
-
-            #self.rooms[name + '_' + str(self.number)] = self.rooms.pop(name)
-
             name = name + '_' + str(self.number)
             self.number += 1
-
-
         self.rooms[name] = Room(width, length, height)
 
     def square(self) -> float:
@@ -144,7 +131,7 @@ if __name__ == "__main__":
     flat_01 = Flat('Советская', '1', '42')
     flat_01.add_room('Комната', 3., 3.6, 2.5)
     flat_01.add_room('Комната', 2.9, 3.9, 2.5)
-    flat_01.add_room('Комната', 1.9, 3.9, 2.5)
+    flat_01.add_room('Комната', 1.9, 3.2, 2.5)
     flat_01.add_room('Кухня', 2.3, 1.5, 2.5)
     flat_01.add_room('Туалет', 1., 1.8, 2.5)
     flat_01.add_room('Ванна', 2.1, 1.3, 2.5)
@@ -161,3 +148,4 @@ if __name__ == "__main__":
     for flat in flats:
         flat.show_full()
         print()
+
