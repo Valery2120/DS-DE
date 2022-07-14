@@ -1,21 +1,22 @@
+## Аннотация классов, функций и т.д. только на английском языке. Переведешь. Пример ниже.
+## В классе описываешь только то, что он представляет собой.
 class Address:
-
     """
-    Класс для представления адреса квартиры.
-    Атрибуты:
-    street : str
-        название улицы
-    house : str
-        номер дома
-    flat : str
-        номер дома
-    Методы:
-    show_adress: None
-        Печатает адрес квартиры
+    Class Address stores information about flat address.
     """
 
-    def __init__(self, street: str, house: str, flat:str) -> None:
-        """Устанавливает все необходимые аттрибуты для класса Address."""
+## В функции описываешь, что она делает и ее параметры следующим образом, тогда при наведении на функцию ты увидишь это описание.
+## При аннотации типизации функций номера чаще всего имеют тип int. Если ты не уверен точно или есть инвариантность ввода различных
+## типов, то указываешь так int|float (python 3.10) или Union[int,float] (Python 3.9).
+    def __init__(self, street: str, house: str, flat: str) -> None:
+        """
+        Init Addres object with it's parameters.
+
+            :param street: Street name.
+            :param house: House number.
+            :param flat: Flat number.
+        """
+
         self.street = street
         self.house = house
         self.flat = flat
@@ -24,9 +25,8 @@ class Address:
         """Печатает адрес квартиры"""
         print(f"{self.street} {self.house}/{self.flat}")
 
-
+## Функции в описании класса указывать тоже не надо. Они автоматически подтянутся.
 class Room:
-
     """
     Класс для определения площади и объема комнаты
 
@@ -51,9 +51,8 @@ class Room:
     def show_room(self) -> None:
         print(f"ширина - {self.width}м, длина - {self.length}м, высота - {self.height}м")
 
-
+## Если класс не наследует другие, скобки не нужны.
 class Flat():
-
     """
     Класс для определения площади, объема и стоимости квартиры.
 
@@ -78,11 +77,9 @@ class Flat():
     price_per_one_meter = 600
     number = 1
 
-
     def __init__(self, street: str, house: str, flat_number: str) -> None:
         self.address = Address(street, house, flat_number)
         self.rooms = {}
-
 
     def add_room(self, name: str, width: float, length: float, height: float) -> None:
         """Добавляется помещение в квартиру."""
@@ -127,7 +124,6 @@ class Flat():
 
 if __name__ == "__main__":
 
-
     flat_01 = Flat('Советская', '1', '42')
     flat_01.add_room('Комната', 3., 3.6, 2.5)
     flat_01.add_room('Комната', 2.9, 3.9, 2.5)
@@ -135,7 +131,6 @@ if __name__ == "__main__":
     flat_01.add_room('Кухня', 2.3, 1.5, 2.5)
     flat_01.add_room('Туалет', 1., 1.8, 2.5)
     flat_01.add_room('Ванна', 2.1, 1.3, 2.5)
-
 
     flat_02 = Flat('Билецкого', '45', '35')
     flat_02.add_room('Комната', 3.7, 2.1, 2.6)
@@ -148,4 +143,3 @@ if __name__ == "__main__":
     for flat in flats:
         flat.show_full()
         print()
-
