@@ -1,16 +1,11 @@
-## Аннотация классов, функций и т.д. только на английском языке. Переведешь. Пример ниже.
-## В классе описываешь только то, что он представляет собой.
 class Address:
     """
     Class Address stores information about flat address.
     """
 
-## В функции описываешь, что она делает и ее параметры следующим образом, тогда при наведении на функцию ты увидишь это описание.
-## При аннотации типизации функций номера чаще всего имеют тип int. Если ты не уверен точно или есть инвариантность ввода различных
-## типов, то указываешь так int|float (python 3.10) или Union[int,float] (Python 3.9).
-    def __init__(self, street: str, house: str, flat: str) -> None:
+    def __init__(self, street: str, house: str, flat:str) -> None:
         """
-        Init Addres object with it's parameters.
+         Init Addres object with it's parameters.
 
             :param street: Street name.
             :param house: House number.
@@ -22,98 +17,125 @@ class Address:
         self.flat = flat
 
     def show_address(self) -> None:
-        """Печатает адрес квартиры"""
+        """
+        Print the address of the flat.
+        """
+
         print(f"{self.street} {self.house}/{self.flat}")
 
-## Функции в описании класса указывать тоже не надо. Они автоматически подтянутся.
+
 class Room:
     """
-    Класс для определения площади и объема комнаты
-
-    Методы:
-    square()
-        Определяет площадь комнаты
-    volume()
-        Определяет объем комнаты
+    Сlass calculates square and volume of the flat.
     """
 
-    def __init__(self, width: float, length: float, height: float) -> None:
+    def __init__(self, width: int|float, length: int|float, height: int|float) -> None:
+        """
+         Init Room object with it's parameters.
+
+            :param width: Room width
+            :param length: Room length
+            :param height: Room height
+        """
+
         self.width = width
         self.length = length
         self.height = height
 
     def square(self) -> float:
+        """
+        Calculates square of the room.
+
+            :return: square of the room.
+        """
+
         return self.width * self.length
 
     def volume(self) -> float:
+        """
+         Calculates volume of the room.
+            :return: volume of the room.
+         """
+
         return self.square() * self.height
 
     def show_room(self) -> None:
+        """Print information about width, length and height of the room"""
+
         print(f"ширина - {self.width}м, длина - {self.length}м, высота - {self.height}м")
 
-## Если класс не наследует другие, скобки не нужны.
-class Flat():
-    """
-    Класс для определения площади, объема и стоимости квартиры.
 
-    Методы:
-    add_room(name, length, width, height):
-        Добавляет помещение в квартиру.
-    square():
-        Определяет площадь квартиры.
-    price()
-        Определяет стоимость квартиры.
-    volume()
-        Определяет объем квартиры.
-    show_brief()
-        Печатает информацию о стоимости, площади и объеме квартиры.
-    show_full()
-        Печатает информацию:
-        адрес,
-        стоимость, площадь и объем квартиры,
-        название, ширину, длину и высоту комнаты.
+class Flat:
+    """
+    Сlass defines square, volume and price of the flat.
     """
 
     price_per_one_meter = 600
     number = 1
 
     def __init__(self, street: str, house: str, flat_number: str) -> None:
+        """
+        Init Flat object with it's parameters.
+            :param street: Street name.
+            :param house: House number.
+            :param flat: Flat number.
+        """
+
         self.address = Address(street, house, flat_number)
         self.rooms = {}
 
     def add_room(self, name: str, width: float, length: float, height: float) -> None:
-        """Добавляется помещение в квартиру."""
+        """
+        Add the room to the flat
+            :param name: Room name.
+            :param width: Room width.
+            :param length: Room length.
+            :param height: Room height.
+        """
+
         if name in self.rooms.keys():
             name = name + '_' + str(self.number)
             self.number += 1
         self.rooms[name] = Room(width, length, height)
 
     def square(self) -> float:
-        """Определяет площадь квартиры."""
+        """
+        Calculates square of the flat
+            :return: Square of the flat
+        """
+
         if self.rooms:
             return sum(room.square() for room in self.rooms.values())
 
     def price(self) -> float:
-        """Определяет стоимость квартиры."""
+        """
+        Calculates price of the flat
+            :return: Price of the flat
+        """
         return self.square() * self.price_per_one_meter
 
     def volume(self) -> float:
-        """Определяет объем квартиры."""
+        """
+        Calculates volume of the flat
+            :return: Volume of the flat
+        """
+
         if self.rooms:
             return sum(room.volume() for room in self.rooms.values())
 
     def show_brief(self) -> None:
-        """Печатает информацию о стоимости, площади и объеме квартиры."""
+        """Print brief information about cost, square and volume of the flat."""
+
         self.address.show_address()
         print(f"Стоимость: {self.price():.2f}$, площадь: {self.square():.2f}м2, объем: {self.volume():.2f}м3")
 
     def show_full(self) -> None:
         """
-        Печатает информацию:
-        адрес,
-        стоимость, площадь и объем квартиры,
-        название, ширину, длину и высоту комнаты.
+        Print full information about flat:
+        address, cost, square and volume of the flat;
+        name, width, length and height of the room.
         """
+        
         self.show_brief()
 
         if self.rooms:
@@ -124,6 +146,7 @@ class Flat():
 
 if __name__ == "__main__":
 
+
     flat_01 = Flat('Советская', '1', '42')
     flat_01.add_room('Комната', 3., 3.6, 2.5)
     flat_01.add_room('Комната', 2.9, 3.9, 2.5)
@@ -131,6 +154,7 @@ if __name__ == "__main__":
     flat_01.add_room('Кухня', 2.3, 1.5, 2.5)
     flat_01.add_room('Туалет', 1., 1.8, 2.5)
     flat_01.add_room('Ванна', 2.1, 1.3, 2.5)
+
 
     flat_02 = Flat('Билецкого', '45', '35')
     flat_02.add_room('Комната', 3.7, 2.1, 2.6)
@@ -143,3 +167,4 @@ if __name__ == "__main__":
     for flat in flats:
         flat.show_full()
         print()
+
