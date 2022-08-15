@@ -1,15 +1,15 @@
-Create database description
-1. Iíve created following entities: owner, passport, sex, nationality, flat, room and ownership. 
-Additionally Iíve created new tables: country, region, city, street.
+Database description.
+1. I‚Äôve created following entities: owner, passport, sex, nationality, flat, room and ownership. 
+Additionally I‚Äôve created new tables: country, region, city, street.
 2. The following relationships exist between entities: one-to-many and many-to-many. There is a one-to-many relationship 
 between owner and passport, because one person can have several passports. 
 2.1. There is also a one-to-many relationship between owner table and sex and nationality tables: one person may have only 
 one nationality and gender, but different people may have the same nationality and gender.
 2.2. There is a one-to-many relationship between the flat and room tables: different rooms belong to the same apartment. 
 2.3. There is a many-to-many relationship between the owner and flat tables: the same owner can have several flats and the 
-same flat apartment can have several owners, so Iíve created linking table which named onwnership.
+same flat apartment can have several owners, so I‚Äôve created linking table which named onwnership.
 2.4. There are a one-to-many relashionship between flat and street, street and city, city and region, region and country. 
-3. Iíve included the following attributes in owner table: 
+3. I‚Äôve included the following attributes in owner table: 
 owner_id as a primary key, 
 last name and first name (have a non-null constraint, because this characteristic is imperative for any person), 
 second name (optional characteristic - a person may not have it), 
@@ -27,15 +27,15 @@ country_id (not null, so the same person may have passports of different countri
 flat_id, 
 house_number (an imperative attribute, is not unique),
 flat_number (an imperative attribute, is not unique), 
-floor (integer data type, Iíve set the constraint - it must be greater than zero)
+floor (integer data type, I‚Äôve set the constraint - it must be greater than zero)
 foreign key city_id and street_id (I suppose that this is enough to determine the address of the flats in this situation).
 6. The following attributes are included in the room tables:
 room_id (integer data type, using as a primary key),
-name (text data type, itís needed to distinguish different types of room),
+name (text data type, it‚Äôs needed to distinguish different types of room),
 length, width and height (real data type, this characteristics has rarely integer type),
-flat_id as a foreign key, because there is a one_to-many relationship between flat and room tables ñ we include 
-foreign key into the table the link is ìmanyî).
-7. In the nationality table Iíve set unique value to the nationality attributes.
+flat_id as a foreign key, because there is a one_to-many relationship between flat and room tables ‚Äì we include 
+foreign key into the table the link is ‚Äúmany‚Äù).
+7. In the nationality table I‚Äôve set unique value to the nationality attributes.
 8. I've created a view table,that named flat_square_top10. The table contains the top 10 flats by square. flat_square_top has 
 following columns: flat_id, region, city, street, house_number, flat_number, square. I haven't included city column in the table 
 because we work only with the flats in Belarus. I've sorted the table by descending order.
