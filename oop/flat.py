@@ -168,3 +168,4 @@ if __name__ == "__main__":
     for flat in flats:
         flat.show_full()
         print()
+
