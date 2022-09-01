@@ -66,7 +66,7 @@ class Flat(Base):
 if __name__ == '__main__':
     def read_database(session):
         flats = session.query(Flat.flat_id, City.city, Street.street, Flat.house_number,
-                              Flat.flat_number, func.round(func.sum(Room.length * Room.width),2).label('square'))\
+                              Flat.flat_number, func.round(func.sum(Room.length * Room.width), 2).label('square'))\
             .join(Flat, Room.flat_id == Flat.flat_id)\
             .join(Street, Flat.street_id == Street.street_id)\
             .join(City, Street.city_id == City.city_id).group_by(Flat.flat_id).all()
