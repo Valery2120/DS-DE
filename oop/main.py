@@ -20,3 +20,4 @@ if __name__ == '__main__':
     # Создать транзакцию
     session = create_session(bind=engine)
     printer(request(session))
+
