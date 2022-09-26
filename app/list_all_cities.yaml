@@ -1,0 +1,49 @@
+swagger: "2.0"
+info:
+  description: This is property database
+  version: "1.0"
+  title: Swagger Property
+consumes:
+  - application/json
+produces:
+  - application/json
+
+basePath: /
+
+# Paths supported by the server application
+paths:
+  /10most-expensive-flats/{city}:
+      parameters:
+        - name: city
+          in: path
+          required: true
+          type: string
+      get:
+        responses:
+          '200':
+            description: Success
+        summary: Fetch 10 the most expensive flats in the city
+        operationId: post_request_flats
+        parameters:
+          - name: payload
+            required: true
+            in: body
+            schema:
+              $ref: '#/definitions/Cities'
+        tags:
+          - name: default
+tags:
+  - name: default
+    description: Default namespace
+definitions:
+  Cities:
+    properties:
+      city:
+        type: string
+        description: Input the name of the city
+    type: object
+responses:
+  ParseError:
+    description: When a mask can't be parsed
+  MaskError:
+    description: When any error occurs on mask

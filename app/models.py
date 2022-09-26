@@ -1,4 +1,7 @@
-from __init__ import db
+from flask_sqlalchemy import SQLAlchemy
+from __main__ import app
+
+db = SQLAlchemy(app)
 
 
 class Sex(db.Model):

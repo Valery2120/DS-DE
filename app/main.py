@@ -1,63 +1,68 @@
-from sqlalchemy import func
+from sqlalchemy import func, desc
 import json
-from __init__ import app
-from flask import Flask, jsonify, request
-from flask_restx import Resource, Api
+from flask import Flask, jsonify, abort
+from flask_restx import Resource, Api, fields, marshal_with
+from flask_sqlalchemy import SQLAlchemy
 
+app = Flask(__name__)
+
+
+
+app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///.\\database\\property.db'
+app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = True
 
 
 
 api = Api(app,
     version="1.0",
-    title="Property database",
-    description="Property analisis",
+    title="Swagger Property",
+    description="This is property database"
 )
 
 from models import *
 
-flat_cost = Room.query.with_entities(Room.flat_id, (func.sum(Room.height*Room.width)*600).label("cost")).group_by(Room.flat_id).all()
 
-cities = City.query.all()
-body = []
-for city in cities:
-    body.append(city.city)
+flat_list = Flat.query.join(Room, Street, City)\
+    .add_columns(Flat.flat_id, City.city, Street.street, Flat.house_number,
+                 Flat.flat_number, (func.sum(Room.length*Room.width)*600).label("cost"))\
+    .group_by(Flat.flat_id)\
+    .order_by(desc('cost'))
 
-@api.route('/request-cities')
-class get_City(Resource):
+resource_fields = api.model('Cities', {
+    'city': fields.String(description='Input the name of the city')
+})
+
+@api.route('/cities', methods=['POST'], endpoint='cities')
+class Request_city(Resource):
     def post(self):
-        """List of cities"""
-        body.sort()
-        return jsonify(body)
+        """List all cities"""
+        cities = City.query.order_by(City.city).all()
+        return jsonify([city.city for city in cities])
 
-@api.route('/request-cities/10most-expensive-flats/<city>')
-class get_flat(Resource):
+
+@api.route('/10most-expensive-flats/<city>', methods=['POST'], endpoint='10most-expensive-flats')
+class Request_flats(Resource):
+    @api.marshal_with(resource_fields)
     def post(self, city):
         """Fetch 10 the most expensive flats in the city"""
-        request_city = City.query.filter(City.city == city).first()
-        streets = Street.query.all()
+        flat_ofcity = []
+        for flat in flat_list:
+            if flat[2] == city:
+                flat_ofcity.append({
+                    'id': flat[1],
+                    'street': flat[3],
+                    'house №': flat[4],
+                    'flat №': flat[5],
+                    'cost': round(flat[6], 2)
+                })
 
-        city_streets = []
-        for street in streets:
-            if street.city_id == request_city.city_id:
-                city_streets.append(street)
+        if len(flat_ofcity) > 0 :
+            return jsonify(flat_ofcity)
+        else:
+            return abort(404, "The database doesn't contain the specified city")
 
-        flats = Flat.query.all()
 
-        serialized1 = []
 
-        for street in city_streets:
-            for flat in flats:
-                for cost in flat_cost:
-                    if (flat.street_id == street.street_id) and (flat.flat_id == cost.flat_id):
-                        serialized1.append({
-                            'id': flat.flat_id,
-                            'street': street.street,
-                            'house №': flat.house_number,
-                            'flat №': flat.flat_number,
-                            'cost': round(cost.cost, 2)
-                        })
-        newlist = sorted(serialized1, key=lambda d: d['cost'], reverse=True)
-        return  jsonify(newlist[0:10])
 
 if __name__ == '__main__':
     app.run()
