@@ -6,31 +6,27 @@ from flask_sqlalchemy import SQLAlchemy
 
 app = Flask(__name__)
 
-
-
-app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///.\\database\\property.db'
+app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///..\\database\\property.db'
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = True
 
-
-
 api = Api(app,
-    version="1.0",
-    title="Swagger Property",
-    description="This is property database"
-)
+          version="1.0",
+          title="Swagger Property",
+          description="This is property database"
+          )
 
 from models import *
 
-
-flat_list = Flat.query.join(Room, Street, City)\
+flat_list = Flat.query.join(Room, Street, City) \
     .add_columns(Flat.flat_id, City.city, Street.street, Flat.house_number,
-                 Flat.flat_number, (func.sum(Room.length*Room.width)*600).label("cost"))\
-    .group_by(Flat.flat_id)\
+                 Flat.flat_number, (func.sum(Room.length * Room.width) * 600).label("cost")) \
+    .group_by(Flat.flat_id) \
     .order_by(desc('cost'))
 
 resource_fields = api.model('Cities', {
     'city': fields.String(description='Input the name of the city')
 })
+
 
 @api.route('/cities', methods=['POST'], endpoint='cities')
 class Request_city(Resource):
@@ -56,12 +52,10 @@ class Request_flats(Resource):
                     'cost': round(flat[6], 2)
                 })
 
-        if len(flat_ofcity) > 0 :
+        if len(flat_ofcity) > 0:
             return jsonify(flat_ofcity)
         else:
             return abort(404, "The database doesn't contain the specified city")
-
-
 
 
 if __name__ == '__main__':
