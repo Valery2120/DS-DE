@@ -1,46 +1,49 @@
 from sqlalchemy import func, desc
-import json
 from flask import Flask, jsonify, abort
-from flask_restx import Resource, Api, fields, marshal_with
+from flask_restx import Resource, Api
 from flask_sqlalchemy import SQLAlchemy
 
 app = Flask(__name__)
-
-app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///..\\database\\property.db'
+app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///.\\database\\property.db'
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = True
+db = SQLAlchemy(app)
+
+
+from models import *
 
 api = Api(app,
           version="1.0",
           title="Swagger Property",
-          description="This is property database"
+          description="This is property database",
+          default='Property database',
+          default_label='Property database operations'
           )
 
-from models import *
+# ns = api.namespace('Property', description='Property operations')
 
-flat_list = Flat.query.join(Room, Street, City) \
-    .add_columns(Flat.flat_id, City.city, Street.street, Flat.house_number,
-                 Flat.flat_number, (func.sum(Room.length * Room.width) * 600).label("cost")) \
-    .group_by(Flat.flat_id) \
-    .order_by(desc('cost'))
-
-resource_fields = api.model('Cities', {
-    'city': fields.String(description='Input the name of the city')
-})
-
-
-@api.route('/cities', methods=['POST'], endpoint='cities')
+@api.route('/api/cities', methods=['POST'], endpoint='cities')
 class Request_city(Resource):
     def post(self):
         """List all cities"""
-        cities = City.query.order_by(City.city).all()
+        cities = db.session.query(City).order_by(City.city).all()
         return jsonify([city.city for city in cities])
 
 
-@api.route('/10most-expensive-flats/<city>', methods=['POST'], endpoint='10most-expensive-flats')
+@api.route('/api/10most-expensive-flats/<city>', methods=['POST'], endpoint='10most-expensive-flats')
 class Request_flats(Resource):
-    @api.marshal_with(resource_fields)
     def post(self, city):
         """Fetch 10 the most expensive flats in the city"""
+        flat_list = db.session.query(Flat) \
+            .join(Room, Street, City) \
+            .add_columns(Flat.flat_id,
+                         City.city,
+                         Street.street,
+                         Flat.house_number,
+                         Flat.flat_number,
+                         (func.sum(Room.length * Room.width) * 600).label("cost")) \
+            .group_by(Flat.flat_id) \
+            .order_by(desc('cost'))
+
         flat_ofcity = []
         for flat in flat_list:
             if flat[2] == city:

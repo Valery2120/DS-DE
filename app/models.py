@@ -1,7 +1,5 @@
-from flask_sqlalchemy import SQLAlchemy
-from __main__ import app
+from __main__ import db
 
-db = SQLAlchemy(app)
 
 
 class Sex(db.Model):
@@ -54,7 +52,8 @@ class Owner(db.Model):
          secondary=association_table,
          back_populates="owners")
 
-    def __init__(self, last_name: str, first_name: str, second_name: str, day_of_birth: int, month_of_birth: int, year_of_birth: int) -> None:
+    def __init__(self, last_name: str, first_name: str, second_name: str,
+                 day_of_birth: int, month_of_birth: int, year_of_birth: int) -> None:
         self.last_name = last_name
         self.first_name = first_name
         self.second_name = second_name

@@ -12,25 +12,18 @@ basePath: /
 
 # Paths supported by the server application
 paths:
-  /cities:
-    get:
+  /api/cities:
+    post:
       responses:
         '200':
           description: Success
       summary: List all cities
       operationId: post_request_city
       tags:
-        - default
+        - Property database
 tags:
-  - name: default
-    description: Default namespace
-definitions:
-  Cities:
-    properties:
-      city:
-        type: string
-        description: Input the name of the city
-    type: object
+  - name: Property database
+    description: Property database operations
 responses:
   ParseError:
     description: When a mask can't be parsed
