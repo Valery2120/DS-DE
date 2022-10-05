@@ -4,10 +4,9 @@ from flask_restx import Resource, Api
 from flask_sqlalchemy import SQLAlchemy
 
 app = Flask(__name__)
-app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///.\\database\\property.db'
+app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///..\\database\\property.db'
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = True
 db = SQLAlchemy(app)
-
 
 from models import *
 
@@ -18,6 +17,7 @@ api = Api(app,
           default='Property database',
           default_label='Property database operations'
           )
+
 
 # ns = api.namespace('Property', description='Property operations')
 
@@ -54,6 +54,8 @@ class Request_flats(Resource):
                     'flat №': flat[5],
                     'cost': round(flat[6], 2)
                 })
+
+        print(type(flat_list._raw_columns[2]))
 
         if len(flat_ofcity) > 0:
             return jsonify(flat_ofcity)

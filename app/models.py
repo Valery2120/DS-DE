@@ -1,7 +1,6 @@
 from __main__ import db
 
 
-
 class Sex(db.Model):
     __tablename__ = 'sex'
 
@@ -27,9 +26,9 @@ class Nationality(db.Model):
 
 
 association_table = db.Table('ownership', db.Model.metadata,
-    db.Column('owner_id', db.ForeignKey('owner.owner_id'), primary_key=True),
-    db.Column('flat_id', db.ForeignKey('flat.flat_id'), primary_key=True)
-)
+                             db.Column('owner_id', db.ForeignKey('owner.owner_id'), primary_key=True),
+                             db.Column('flat_id', db.ForeignKey('flat.flat_id'), primary_key=True)
+                             )
 
 
 class Owner(db.Model):
@@ -48,9 +47,9 @@ class Owner(db.Model):
     email = db.Column(db.String)
 
     flats = db.relationship(
-         "Flat",
-         secondary=association_table,
-         back_populates="owners")
+        "Flat",
+        secondary=association_table,
+        back_populates="owners")
 
     def __init__(self, last_name: str, first_name: str, second_name: str,
                  day_of_birth: int, month_of_birth: int, year_of_birth: int) -> None:
