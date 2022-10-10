@@ -1,0 +1,75 @@
+{
+	"info": {
+		"_postman_id": "cb7be424-93bb-4bd5-96ae-0808c590ad35",
+		"name": "New Collection",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+		"_exporter_id": "23436250"
+	},
+	"item": [
+		{
+			"name": "post 10most-expensive-flats",
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "Content-Type",
+						"value": "application/json"
+					},
+					{
+						"key": "Content-Length",
+						"value": "0"
+					}
+				],
+				"url": {
+					"raw": "http://127.0.0.1:5000/api/10most-expensive-flats/Brest",
+					"protocol": "http",
+					"host": [
+						"127",
+						"0",
+						"0",
+						"1"
+					],
+					"port": "5000",
+					"path": [
+						"api",
+						"10most-expensive-flats",
+						"Brest"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "post all_cities",
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "Content-Type",
+						"value": "application/json"
+					},
+					{
+						"key": "Content-Length",
+						"value": "0"
+					}
+				],
+				"url": {
+					"raw": "http://127.0.0.1:5000/api/cities",
+					"protocol": "http",
+					"host": [
+						"127",
+						"0",
+						"0",
+						"1"
+					],
+					"port": "5000",
+					"path": [
+						"api",
+						"cities"
+					]
+				}
+			},
+			"response": []
+		}
+	]
+}
