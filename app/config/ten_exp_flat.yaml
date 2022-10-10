@@ -12,13 +12,18 @@ basePath: /
 
 # Paths supported by the server application
 paths:
-  /api/cities:
+  /api/10most-expensive-flats/{city}:
+    parameters:
+      - name: city
+        in: path
+        required: true
+        type: string
     post:
       responses:
         '200':
           description: Success
-      summary: List all cities
-      operationId: post_request_city
+      summary: Fetch 10 the most expensive flats in the city
+      operationId: post_request_flats
       tags:
         - Property database
 tags:
