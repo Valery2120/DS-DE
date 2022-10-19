@@ -2,11 +2,16 @@ from sqlalchemy import func, desc
 from flask import Flask, jsonify, abort
 from flask_restx import Resource, Api
 from flask_sqlalchemy import SQLAlchemy
+import os
+
+dirname = os.path.dirname(__file__)
 
 app = Flask(__name__)
-app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///.\\database\\property.db'
+app.config['SQLALCHEMY_DATABASE_URI'] = \
+    'sqlite:///' + os.path.join(dirname, 'database\property.db')
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = True
 db = SQLAlchemy(app)
+print(app.config['SQLALCHEMY_DATABASE_URI'])
 
 from models import *
 
