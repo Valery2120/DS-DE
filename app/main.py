@@ -4,7 +4,7 @@ from flask_restx import Resource, Api
 from flask_sqlalchemy import SQLAlchemy
 
 app = Flask(__name__)
-app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///..\\database\\property.db'
+app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///.\\database\\property.db'
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = True
 db = SQLAlchemy(app)
 
@@ -18,11 +18,30 @@ api = Api(app,
           default_label='Property database operations'
           )
 
+ns = api.namespace('Property', description='Property operations')
 
-# ns = api.namespace('Property', description='Property operations')
+
+def extract_data(city):
+    data = [dict(row) for row in db.session.query(Flat) \
+        .join(Room, Street, City) \
+        .add_columns(Flat.flat_id,
+                     City.city,
+                     Street.street,
+                     Flat.house_number,
+                     Flat.flat_number,
+                     (func.round((func.sum(Room.length * Room.width) * 600), 2)).label("cost")) \
+        .filter(City.city == city) \
+        .group_by(Flat.flat_id) \
+        .order_by(desc('cost')) \
+        .limit(10)]
+    for row in data:
+        del row["Flat"]
+
+    return data
+
 
 @api.route('/api/cities', methods=['POST'], endpoint='cities')
-class Request_city(Resource):
+class RequestCity(Resource):
     def post(self):
         """List all cities"""
         cities = db.session.query(City).order_by(City.city).all()
@@ -30,39 +49,17 @@ class Request_city(Resource):
 
 
 @api.route('/api/10most-expensive-flats/<city>', methods=['POST'], endpoint='10most-expensive-flats')
-class Request_flats(Resource):
+class RequestFlats(Resource):
     def post(self, city):
         """Fetch 10 the most expensive flats in the city"""
-        flat_list = db.session.query(Flat) \
-            .join(Room, Street, City) \
-            .add_columns(Flat.flat_id,
-                         City.city,
-                         Street.street,
-                         Flat.house_number,
-                         Flat.flat_number,
-                         (func.sum(Room.length * Room.width) * 600).label("cost")) \
-            .group_by(Flat.flat_id) \
-            .order_by(desc('cost'))
 
-        flat_ofcity = []
-        for flat in flat_list:
-            if flat[2] == city:
-                flat_ofcity.append({
-                    'id': flat[1],
-                    'street': flat[3],
-                    'house №': flat[4],
-                    'flat №': flat[5],
-                    'cost': round(flat[6], 2)
-                })
+        flat_list = extract_data(city)
 
-        print(type(flat_list._raw_columns[2]))
-
-        if len(flat_ofcity) > 0:
-            return jsonify(flat_ofcity)
+        if len(flat_list) > 0:
+            return jsonify(flat_list)
         else:
             return abort(404, "The database doesn't contain the specified city")
 
 
 if __name__ == '__main__':
     app.run()
-
